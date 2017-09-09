@@ -1,11 +1,4 @@
-#include <Arduino.h>
 #include <HX711.h>
-
-#if ARDUINO_VERSION <= 106
-    // "yield" is not implemented as noop in older Arduino Core releases, so let's define it.
-    // See also: https://stackoverflow.com/questions/34497758/what-is-the-secret-of-the-arduino-yieldfunction/34498165#34498165
-    void yield(void) {};
-#endif
 
 HX711::HX711(byte dout, byte pd_sck, byte gain) {
 	begin(dout, pd_sck, gain);
@@ -53,6 +46,7 @@ long HX711::read() {
 	while (!is_ready()) {
 		// Will do nothing on Arduino but prevent resets of ESP8266 (Watchdog Issue)
 		yield();
+		ESP.wdtFeed();
 	}
 
 	unsigned long value = 0;
@@ -87,6 +81,7 @@ long HX711::read() {
 }
 
 long HX711::read_average(byte times) {
+	ESP.wdtFeed();
 	long sum = 0;
 	for (byte i = 0; i < times; i++) {
 		sum += read();

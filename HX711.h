@@ -1,11 +1,14 @@
+#include <Arduino.h>
 #ifndef HX711_h
 #define HX711_h
 
+/*  remove the old check code, include also induce the wdt reset with pubsublcient library
 #if ARDUINO >= 100
 #include "Arduino.h"
 #else
 #include "WProgram.h"
 #endif
+*/
 
 class HX711
 {
@@ -13,13 +16,14 @@ class HX711
 		byte PD_SCK;	// Power Down and Serial Clock Input Pin
 		byte DOUT;		// Serial Data Output Pin
 		byte GAIN;		// amplification factor
-		long OFFSET = 0;	// used for tare weight
+
 		float SCALE = 1;	// used to return weight in grams, kg, ounces, whatever
 
 	public:
 		// define clock and data pin, channel, and gain factor
 		// channel selection is made by passing the appropriate gain: 128 or 64 for channel A, 32 for channel B
 		// gain: 128 or 64 for channel A; channel B works with 32 gain factor only
+		long OFFSET = 0;	// used for tare weight  <-- for pre-tared set value
 		HX711(byte dout, byte pd_sck, byte gain = 128);
 
 		HX711();
